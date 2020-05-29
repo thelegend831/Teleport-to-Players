@@ -1,26 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MelonLoader;
-using Unity;
+﻿using MelonLoader;
 using UnityEngine;
-using Harmony;
-using NET_SDK;
-using UnityEngine.SceneManagement;
-using UnhollowerBaseLib;
-using UnityEngine.Experimental.PlayerLoop;
 using VRC.Core;
 using VRC;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using VRCSDK2;
-using Il2CppSystem;
-using IntPtr = System.IntPtr;
-using ConsoleColor = System.ConsoleColor;
-using UnhollowerRuntimeLib;
-using IL2CPP = UnhollowerBaseLib.IL2CPP;
 using UnityEngine.UI;
 using VRC.UI;
 
@@ -109,7 +90,7 @@ namespace Teleport
                 MelonModLogger.Log("Teleporting to player");
                 var player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
                 player.transform.position = GetPlayer(screens.transform.Find("UserInfo").transform.GetComponentInChildren<PageUserInfo>().user.id).transform.position;
-                VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_Boolean_0(false);
+                VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_Boolean_2(false);
             }));
             ourBut.gameObject.SetActive(true);
         }
