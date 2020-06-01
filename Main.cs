@@ -41,6 +41,10 @@ namespace Teleport
 
             return butTransform;
         }
+        public static void showDialog(string title, string message)
+        {
+            Resources.FindObjectsOfTypeAll<VRCUiPopupManager>()[0].Method_Public_Void_String_String_Single_0(title, message, 10f);
+        }
 
         public static Player GetPlayer(string UserID)
         {
@@ -69,11 +73,21 @@ namespace Teleport
 
             this.AddMenuButton("tpQuickMenu", QuickMenu.prop_QuickMenu_0.transform.Find("UserInteractMenu"), "<color=white>Teleport to Player</color>", "Teleports you to the selected player", 0, 0, new System.Action(() =>
             {
+                VRCPlayer player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                APIUser APIUser = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0;
+                if (player.prop_Player_0.field_Private_APIUser_0.id == APIUser.id)
+                {
+                    showDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
+                    return;
+                }
+                Player foundPlayer = GetPlayer(APIUser.id);
+                if (foundPlayer == null)
+                {
+                    showDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
+                    return;
+                }
                 MelonModLogger.Log("Teleporting to player");
-                var player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                var APIUser = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0;
-                var SelectedPlayer = GetPlayer(APIUser.id);
-                player.transform.position = SelectedPlayer.transform.position;
+                player.transform.position = foundPlayer.transform.position;
             }));
 
             GameObject screens = GameObject.Find("Screens");
@@ -82,14 +96,28 @@ namespace Teleport
             ourBut.name = "tpSocialMenu";
             ourBut.SetParent(playlistsPanel, false);
             ourBut.GetComponentInChildren<Text>().text = "<color=white>Teleport to</color>";
-            ourBut.localPosition = new Vector3(ourBut.localPosition.x, ourBut.localPosition.y + 76.0f, ourBut.localPosition.z);
+            ourBut.localPosition = new Vector3(ourBut.localPosition.x - 1267.0f, ourBut.localPosition.y - 315.0f, ourBut.localPosition.z);
             ourBut.transform.Find("Image/Icon_New").transform.gameObject.SetActive(false);
+            RectTransform ourButRectTransform = ourBut.GetComponentInChildren<RectTransform>();
+            ourButRectTransform.sizeDelta = new Vector2(ourButRectTransform.sizeDelta.x - 75, ourButRectTransform.sizeDelta.y);
             ourBut.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             ourBut.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
+                VRCPlayer player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                string toPlayerId = screens.transform.Find("UserInfo").transform.GetComponentInChildren<PageUserInfo>().user.id;
+                if (player.prop_Player_0.field_Private_APIUser_0.id == toPlayerId)
+                {
+                    showDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
+                    return;
+                }
+                Player foundPlayer = GetPlayer(toPlayerId);
+                if (foundPlayer == null)
+                {
+                    showDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
+                    return;
+                }
                 MelonModLogger.Log("Teleporting to player");
-                var player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                player.transform.position = GetPlayer(screens.transform.Find("UserInfo").transform.GetComponentInChildren<PageUserInfo>().user.id).transform.position;
+                player.transform.position = foundPlayer.transform.position;
                 VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_Boolean_2(false);
             }));
             ourBut.gameObject.SetActive(true);
