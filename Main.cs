@@ -43,7 +43,7 @@ namespace Teleport
         }
         public static void showDialog(string title, string message)
         {
-            Resources.FindObjectsOfTypeAll<VRCUiPopupManager>()[0].Method_Public_Void_String_String_Single_0(title, message, 10f);
+            Resources.FindObjectsOfTypeAll<VRCUiPopupManager>()[0].Method_Public_Void_String_String_Single_1(title, message, 10f);
         }
 
         public static Player GetPlayer(string UserID)
