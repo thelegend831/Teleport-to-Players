@@ -7,7 +7,7 @@ using VRC.UI;
 
 namespace Teleport
 {
-    internal class tpm : MelonMod
+    internal class Tpm : MelonMod
     {
         private Transform AddMenuButton(string butName, Transform parent, string butText, string tooltip, int butX, int butY, System.Action butAction)
         {
@@ -41,11 +41,14 @@ namespace Teleport
 
             return butTransform;
         }
-        public static void showDialog(string title, string message)
+        public static void ShowDialog(string title, string message)
         {
-            Resources.FindObjectsOfTypeAll<VRCUiPopupManager>()[0].Method_Public_Void_String_String_Single_3(title, message, 10f);
+            Resources.FindObjectsOfTypeAll<VRCUiPopupManager>()[0].Method_Public_Void_String_String_Single_0(title, message, 10f);
         }
-
+        public static void CloseMenu()
+        {
+            VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_Boolean_4(false);
+        }
         public static Player GetPlayer(string UserID)
         {
             var Players = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0;
@@ -61,29 +64,27 @@ namespace Teleport
 
             return FoundPlayer;
         }
-
         public override void OnApplicationStart()
         {
             MelonModLogger.Log("Teleport to Players mod started");
         }
-
         public override void VRChat_OnUiManagerInit()
         {
             var playerManager = PlayerManager.Method_Public_Static_PlayerManager_0();
 
-            this.AddMenuButton("tpQuickMenu", QuickMenu.prop_QuickMenu_0.transform.Find("UserInteractMenu"), "<color=white>Teleport to Player</color>", "Teleports you to the selected player", 0, 0, new System.Action(() =>
+            this.AddMenuButton("tpQuickMenu", QuickMenu.prop_QuickMenu_0.transform.Find("UserInteractMenu"), "<color=white>Teleport to Player</color>", "Teleports you to the selected player", -1, -1, new System.Action(() =>
             {
                 VRCPlayer player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
                 APIUser APIUser = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0;
                 if (player.prop_Player_0.field_Private_APIUser_0.id == APIUser.id)
                 {
-                    showDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
+                    ShowDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
                     return;
                 }
                 Player foundPlayer = GetPlayer(APIUser.id);
                 if (foundPlayer == null)
                 {
-                    showDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
+                    ShowDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
                     return;
                 }
                 MelonModLogger.Log("Teleporting to player");
@@ -107,18 +108,18 @@ namespace Teleport
                 string toPlayerId = screens.transform.Find("UserInfo").transform.GetComponentInChildren<PageUserInfo>().user.id;
                 if (player.prop_Player_0.field_Private_APIUser_0.id == toPlayerId)
                 {
-                    showDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
+                    ShowDialog("<color=red>Error!</color>", "<color=white>You can't teleport to yourself! You're already here!</color>");
                     return;
                 }
                 Player foundPlayer = GetPlayer(toPlayerId);
                 if (foundPlayer == null)
                 {
-                    showDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
+                    ShowDialog("<color=red>Error!</color>", "<color=white>Player is not in the current instance.</color>");
                     return;
                 }
                 MelonModLogger.Log("Teleporting to player");
                 player.transform.position = foundPlayer.transform.position;
-                VRCUiManager.prop_VRCUiManager_0.Method_Public_Void_Boolean_2(false);
+                CloseMenu();
             }));
             ourBut.gameObject.SetActive(true);
         }

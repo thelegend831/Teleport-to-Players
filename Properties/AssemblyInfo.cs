@@ -35,5 +35,5 @@ using MelonLoader;
 [assembly: AssemblyVersion("1.0.4")]
 [assembly: AssemblyFileVersion("1.0.4.0")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: MelonModInfo(typeof(Teleport.tpm), "Teleport to Players", " build 1.0.4", "Huntereb", "")]
+[assembly: MelonModInfo(typeof(Teleport.Tpm), "Teleport to Players", " build 1.0.4", "Huntereb", "")]
 [assembly: MelonModGame("VRChat", "VRChat")]
